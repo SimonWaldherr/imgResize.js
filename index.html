@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>imgResize.js</title>
+  <style>
+    body {
+      font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    }
+  </style>
+</head>
+<body>
+<label for="width">WIDTH: </label>
+<input name="width" id="width" type="range" max="1000" min="0" value="485" onchange="imgResize({'width' : this.value, 'canvas' : 'Canvas'})">
+<label for="height">HEIGHT: </label>
+<input name="height" id="height" type="range" max="1000" min="0" value="650" onchange="imgResize({'height' : this.value, 'canvas' : 'Canvas'})">
+<a href="#" onclick="imgResize({'width' : 485, 'height' : 650, 'canvas' : 'Canvas'})">(resize)</a>
+<br/>
+<canvas id="Canvas" data-src="img.jpg" width="485" height="650" style="border:1px solid #c3c3c3;">
+Your browser does not support the canvas element.
+</canvas>
+<script type="text/javascript">
+    function loadImage(options) {
+      var canvas = (typeof options['canvas'] !== 'string') ? options['canvas'] : document.getElementById(options['canvas']),
+          imgsrc = (options['img'] !== undefined) ? (typeof options['img'] !== 'string') ? options['img'].src : options['img'] : canvas.getAttribute('data-src'),
+          cxt, img;
+      
+      canvas.setAttribute('data-src', imgsrc);
+      cxt = canvas.getContext("2d");
+      img = new Image();
+      img.onload = function() {
+        cxt.drawImage(img,0,0);
+      }
+      img.src = imgsrc;
+    }
+    
+    function imgResize(options) {
+      var canvas = (typeof options['canvas'] !== 'string') ? options['canvas'] : document.getElementById(options['canvas']),
+          imgsrc = (options['img'] !== undefined) ? (typeof options['img'] !== 'string') ? options['img'].src : options['img'] : canvas.getAttribute('data-src'),
+          height = (options['height'] !== undefined) ? options['height'] : canvas.getAttribute('height'),
+          width = (options['width'] !== undefined) ? options['width'] : canvas.getAttribute('width'),
+          cxt, img;
+      canvas.setAttribute('width', width);
+      canvas.setAttribute('height', height);
+      cxt = canvas.getContext("2d");
+      img = new Image();
+      img.src = imgsrc;
+      
+      cxt.drawImage(img,0,0,width,height);
+    }
+    
+    window.onload = function() {
+      loadImage({'canvas' : document.getElementById('Canvas'), 'img' : 'img.jpg'});
+    };
+</script>
+</body>
+</html>
