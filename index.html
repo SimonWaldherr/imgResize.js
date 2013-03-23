@@ -3,53 +3,46 @@
 <head>
   <meta charset="utf-8">
   <title>imgResize.js</title>
+  <script type="text/javascript" async="" src="imgresize.js"></script>
   <style>
     body {
       font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
     }
+
   </style>
 </head>
 <body>
+<h2>Normal</h2>
 <label for="width">WIDTH: </label>
 <input name="width" id="width" type="range" max="1000" min="0" value="485" onchange="imgResize({'width' : this.value, 'canvas' : 'Canvas'})">
 <label for="height">HEIGHT: </label>
 <input name="height" id="height" type="range" max="1000" min="0" value="650" onchange="imgResize({'height' : this.value, 'canvas' : 'Canvas'})">
-<a href="#" onclick="imgResize({'width' : 485, 'height' : 650, 'canvas' : 'Canvas'})">(resize)</a>
 <br/>
+<h2>Smart</h2>
+<label for="width">WIDTH: </label>
+<input name="width" id="width" type="range" max="1000" min="0" value="485" onchange="imgSmartResize({'width' : this.value, 'canvas' : 'Canvas'})">
+<label for="height">HEIGHT: </label>
+<input name="height" id="height" type="range" max="1000" min="0" value="650" onchange="imgSmartResize({'height' : this.value, 'canvas' : 'Canvas'})">
+<br/>
+<a href="#" onclick="imgResize({'width' : 485, 'height' : 350, 'canvas' : 'Canvas'})">(resize)</a>
+ - 
+<a href="#" onclick="edgeDetect({'canvas' : 'Canvas'}); return false;">detect edges</a>
+ - 
+ <a href="#" onclick="imgSmartResize({'width' : 410, 'height' : 430, 'canvas' : 'Canvas'});">smart resize</a>
+<br/>
+<canvas id="originalCanvas" data-src="img.jpg" width="485" height="650" style="border:1px solid #c3c3c3;">
+Your browser does not support the canvas element.
+</canvas>
 <canvas id="Canvas" data-src="img.jpg" width="485" height="650" style="border:1px solid #c3c3c3;">
 Your browser does not support the canvas element.
 </canvas>
+<div id="json">imgSmartResize
+  
+</div>
+<br/>
 <script type="text/javascript">
-    function loadImage(options) {
-      var canvas = (typeof options['canvas'] !== 'string') ? options['canvas'] : document.getElementById(options['canvas']),
-          imgsrc = (options['img'] !== undefined) ? (typeof options['img'] !== 'string') ? options['img'].src : options['img'] : canvas.getAttribute('data-src'),
-          cxt, img;
-      
-      canvas.setAttribute('data-src', imgsrc);
-      cxt = canvas.getContext("2d");
-      img = new Image();
-      img.onload = function() {
-        cxt.drawImage(img,0,0);
-      }
-      img.src = imgsrc;
-    }
-    
-    function imgResize(options) {
-      var canvas = (typeof options['canvas'] !== 'string') ? options['canvas'] : document.getElementById(options['canvas']),
-          imgsrc = (options['img'] !== undefined) ? (typeof options['img'] !== 'string') ? options['img'].src : options['img'] : canvas.getAttribute('data-src'),
-          height = (options['height'] !== undefined) ? options['height'] : canvas.getAttribute('height'),
-          width = (options['width'] !== undefined) ? options['width'] : canvas.getAttribute('width'),
-          cxt, img;
-      canvas.setAttribute('width', width);
-      canvas.setAttribute('height', height);
-      cxt = canvas.getContext("2d");
-      img = new Image();
-      img.src = imgsrc;
-      
-      cxt.drawImage(img,0,0,width,height);
-    }
-    
     window.onload = function() {
+      loadImage({'canvas' : document.getElementById('originalCanvas'), 'img' : 'img.jpg'});
       loadImage({'canvas' : document.getElementById('Canvas'), 'img' : 'img.jpg'});
     };
 </script>
