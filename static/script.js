@@ -2,7 +2,11 @@ var demoimages = [{'name':'Air Force One','license':'Arbeit der US-Regierung','f
                   {'name':'On the Moon','license':'Keine Urheberrechtsbeschränkungen','filename':'5136519916_e5beec314f_z.jpg','source':'http://www.flickr.com/photos/nasacommons/5136519916/','height':640},
                   {'name':'Tree Silhouette','license':'CC BY-SA 2.0','filename':'525294006_2f0ffd631f_z.jpg','source':'http://www.flickr.com/photos/peterpearson/525294006/','height':426},
                   {'name':'Tree and Sky','license':'CC BY-NC 2.0','filename':'2515331481_4997cae738_z.jpg','source':'http://www.flickr.com/photos/freefoto/2515331481/','height':480},
-                  {'name':'Two Trees','license':'CC BY-SA 2.0','filename':'2280692112_96b565920b_z.jpg','source':'http://www.flickr.com/photos/salford_ian/2280692112/','height':480}];
+                  {'name':'Two Trees','license':'CC BY-SA 2.0','filename':'2280692112_96b565920b_z.jpg','source':'http://www.flickr.com/photos/salford_ian/2280692112/','height':480},
+                  {'name':'field','license':'Public Domain','filename':'field.jpg','source':' ','height':478},
+                  {'name':'sun','license':'Public Domain','filename':'sun.jpg','source':' ','height':480},
+                  {'name':'Cat content','license':'Public Domain','filename':'catcontent.jpg','source':' ','height':480},
+                  {'name':'L\'Ultima Cena','license':'Public Domain','filename':'lultimacena.jpg','source':' ','height':346}];
 function loadImageToCanvas(json, id) {
   loadImage({'canvas' : document.getElementById('originalCanvas'), 'img' : 'static/'+json[id].filename});
   loadImage({'canvas' : document.getElementById('Canvas'), 'img' : 'static/'+json[id].filename});
@@ -19,8 +23,12 @@ function loadImageToCanvas(json, id) {
 function printImgList(json, id) {
   var i, output = '', regex = /(http:\/\/www\.([a-zA-Z.\/_]+))/i, linktext;
   for(i=0;i<json.length;i+=1) {
-    linktext = regex.exec(json[i].source);
-    output += '<li><b onclick="loadImageToCanvas(demoimages,'+i+')">'+json[i].name+'</b> <i>(license: '+json[i].license+', from: <a href="'+json[i].source+'">'+linktext[2]+'</a>)</i></li>';
+    if(json[i].license !== 'Public Domain') {
+      linktext = regex.exec(json[i].source);
+      output += '<li><b onclick="loadImageToCanvas(demoimages,'+i+')">'+json[i].name+'</b> <i>(license: '+json[i].license+', from: <a href="'+json[i].source+'">'+linktext[2]+'</a>)</i></li>';
+    } else {
+      output += '<li><b onclick="loadImageToCanvas(demoimages,'+i+')">'+json[i].name+'</b> <i>(license: '+json[i].license+')</i></li>';
+    }
   }
   document.getElementById(id).innerHTML = output;
 }
