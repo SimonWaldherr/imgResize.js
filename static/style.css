@@ -1,0 +1,26 @@
+body {
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+  background-image: url('grey_wash_wall.png'); /* Subtle Patterns by Subtle Patterns (http://subtlepatterns.com/) are licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License (http://creativecommons.org/licenses/by-sa/3.0/deed.en_US). */
+}
+ul {
+  list-style: none;
+}
+#imglist b {
+  cursor: pointer;
+}
+#imglist i {
+  font-size: 11px;
+}
+.box {
+  position: relative;
+  width: 720px;
+  margin: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 10px 5px 10px 5px;
+  background-color: #FFF;
+  border-radius: 4px;
+  box-shadow: 0 0 10px 0px #000;
+  text-align: center;
+  font-family: "Hoefler Text", Constantia, Palatino, Georgia, serif;
+}
