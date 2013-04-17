@@ -15,6 +15,8 @@ function loadImageToCanvas(json, id) {
   
   document.getElementById('originalCanvas').setAttribute('height',json[id].height);
   document.getElementById('Canvas').setAttribute('height',json[id].height);
+  //delete edgeDetectLines;
+  edgeDetectLines = [];
 }
 function printImgList(json, id) {
   var i, output = '', regex = /(http:\/\/www\.([a-zA-Z.\/_]+))/i, linktext;

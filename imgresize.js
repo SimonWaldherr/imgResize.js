@@ -1,12 +1,12 @@
 /*
- * tinyOSF.js
+ * imgResize.js
  *
  * Copyright 2013, Simon Waldherr - http://simon.waldherr.eu/
  * Released under the MIT Licence
  * http://opensource.org/licenses/MIT
  *
  * Github:  https://github.com/SimonWaldherr/imgResize.js
- * Version: 0.0.2
+ * Version: 0.0.3
  */
 
 /*jslint browser: true*/
@@ -226,22 +226,20 @@ function imgSmartResize(options) {
     x, y,
     original = ocxt.getImageData(0, 0, ocanvas.getAttribute('width'), ocanvas.getAttribute('height')),
     outputData = cxt.createImageData(width, height);
-  edgeDetect({
-    'canvas': 'Canvas'
-  });
-
-
+    edgeDetect({'canvas': 'originalCanvas'});
 
   function boringLines(linesArray, max) {
     var highest,
+      newLinesArray,
       i,
       higharray = [];
 
-    max = (max === undefined) ? linesArray.length : (max > linesArray.length) ? linesArray.length : max;
+    newLinesArray = linesArray;
+    max = (max === undefined) ? newLinesArray.length : (max > newLinesArray.length) ? newLinesArray.length : max;
     for (i = 0; i < max; i += 1) {
-      highest = linesArray.indexOf(Math.min.apply(window, linesArray));
-      if (linesArray[highest] < 255) {
-        linesArray[highest] = 255;
+      highest = newLinesArray.indexOf(Math.min.apply(window, newLinesArray));
+      if (newLinesArray[highest] < 255) {
+        newLinesArray[highest] = 255;
         higharray[higharray.length] = highest;
       }
     }
