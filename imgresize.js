@@ -185,11 +185,11 @@ function edgeDetect(options) {
   "use strict";
   var canvas = (typeof options.canvas !== 'string') ? options.canvas : document.getElementById(options.canvas),
     ocanvas = (typeof options.ocanvas !== 'string') ? options.ocanvas : document.getElementById(options.ocanvas),
-    cxt = canvas.getContext("2d"),
-    input = cxt.getImageData(0, 0, canvas.width, canvas.height);
+    ocxt = ocanvas.getContext("2d"),
+    input = ocxt.getImageData(0, 0, ocanvas.width, ocanvas.height);
 
-  edgeDetectLines[0] = doColorBookW(input, cxt, ocanvas);
-  edgeDetectLines[1] = doColorBookH(input, cxt, ocanvas);
+  edgeDetectLines[0] = doColorBookW(input, ocxt, ocanvas);
+  edgeDetectLines[1] = doColorBookH(input, ocxt, ocanvas);
   return edgeDetectLines;
 }
 
@@ -226,7 +226,7 @@ function imgSmartResize(options) {
     x, y,
     original = ocxt.getImageData(0, 0, ocanvas.getAttribute('width'), ocanvas.getAttribute('height')),
     outputData = cxt.createImageData(width, height);
-    edgeDetect(options);
+  edgeDetect(options);
 
   function boringLines(linesArray, max) {
     var highest,
