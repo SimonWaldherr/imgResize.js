@@ -18,16 +18,19 @@ function random(min, max) {
 function loadImageToCanvas(json, id) {
   loadImage({'canvas' : document.getElementById('Canvas'), 'ocanvas' : document.getElementById('originalCanvas'), 'img' : 'static/'+json[id].filename});
   loadImage({'canvas' : document.getElementById('originalCanvas'), 'img' : 'static/'+json[id].filename});
-  document.getElementById('height').setAttribute('max',json[id].height);
-  document.getElementById('height').setAttribute('value',json[id].height);
-  document.getElementById('width').setAttribute('value',640);
-  document.getElementById('heights').setAttribute('max',json[id].height);
-  document.getElementById('heights').setAttribute('value',json[id].height);
-  document.getElementById('widths').setAttribute('value',640);
+  
+  document.getElementById('height').max = json[id].height;
+  document.getElementById('height').value = json[id].height;
+  document.getElementById('width').value = 640;
+  document.getElementById('heights').max = json[id].height;
+  document.getElementById('heights').value = json[id].height;
+  document.getElementById('widths').value = 640;
   
   document.getElementById('originalCanvas').setAttribute('height',json[id].height);
   document.getElementById('Canvas').setAttribute('height',json[id].height);
   edgeDetectLines = [];
+  
+  imgResize({'width' : 640, 'canvas' : 'Canvas'});
 }
 
 function printImgList(json, id) {
@@ -43,7 +46,38 @@ function printImgList(json, id) {
   document.getElementById(id).innerHTML = output;
 }
 
+function loadImage(options) {
+  "use strict";
+  var canvas = (typeof options.canvas !== 'string') ? options.canvas : document.getElementById(options.canvas),
+    imgsrc = (options.img !== undefined) ? (typeof options.img !== 'string') ? options.img.src : options.img : canvas.getAttribute('data-src'),
+    cxt, img;
+
+  canvas.setAttribute('data-src', imgsrc);
+  cxt = canvas.getContext("2d");
+  img = new Image();
+  img.onload = function () {
+    cxt.drawImage(img, 0, 0);
+  };
+  img.src = imgsrc;
+}
+
+function imgResize(options) {
+  "use strict";
+  var canvas = (typeof options.canvas !== 'string') ? options.canvas : document.getElementById(options.canvas),
+    imgsrc = (options.img !== undefined) ? (typeof options.img !== 'string') ? options.img.src : options.img : canvas.getAttribute('data-src'),
+    height = (options.height !== undefined) ? options.height : canvas.getAttribute('height'),
+    width = (options.width !== undefined) ? options.width : canvas.getAttribute('width'),
+    cxt, img;
+  canvas.setAttribute('width', width);
+  canvas.setAttribute('height', height);
+  cxt = canvas.getContext("2d");
+  img = new Image();
+  img.src = imgsrc;
+
+  cxt.drawImage(img, 0, 0, width, height);
+}
+
 window.onload = function() {
   printImgList(demoimages,'imglist');
-  loadImageToCanvas(demoimages, random(0, demoimages.length));
+  loadImageToCanvas(demoimages, random(0, demoimages.length-1));
 };

@@ -11,22 +11,7 @@
 
 /*jslint browser: true*/
 /*global Image*/
-/*exported imgSmartResize, loadImage, imgResize*/
-
-function loadImage(options) {
-  "use strict";
-  var canvas = (typeof options.canvas !== 'string') ? options.canvas : document.getElementById(options.canvas),
-    imgsrc = (options.img !== undefined) ? (typeof options.img !== 'string') ? options.img.src : options.img : canvas.getAttribute('data-src'),
-    cxt, img;
-
-  canvas.setAttribute('data-src', imgsrc);
-  cxt = canvas.getContext("2d");
-  img = new Image();
-  img.onload = function () {
-    cxt.drawImage(img, 0, 0);
-  };
-  img.src = imgsrc;
-}
+/*exported imgSmartResize*/
 
 function edgeDetection(input, baseColor, grey, context, canvas) {
   "use strict";
@@ -103,72 +88,55 @@ function edgeDetection(input, baseColor, grey, context, canvas) {
   return output;
 }
 
-function doColorBookH(input, cxt, canvas) {
+function doColorBook(input, cxt, canvas, mode) {
   "use strict";
   var w = input.width,
     h = input.height,
     output = edgeDetection(input, 255, 1, cxt, canvas),
     outputData = output.data,
     newData = [],
+    tempData,
     maxData = false,
     minData = false,
     pixel = 0,
     y, x, i;
   for (y = 0; y < h; y += 1) {
     for (x = 0; x < w; x += 1) {
+      if(mode === 'h') {
+        tempData = newData[y];
+      } else if(mode === 'w') {
+        tempData = newData[x];
+      }
       if (outputData[pixel] < 240) {
-        if (newData[y] === undefined) {
-          newData[y] = 0;
+        if (tempData === undefined) {
+          if(mode === 'h') {
+            newData[y] = 0;
+          } else if(mode === 'w') {
+            newData[x] = 0;
+          }
+          tempData = 0;
         }
-        newData[y] += 1;
+        if(mode === 'h') {
+          newData[y] += 1;
+        } else if(mode === 'w') {
+          newData[x] += 1;
+        }
+        tempData += 1;
       } else {
-        if (newData[y] === undefined) {
-          newData[y] = 0;
+        if (tempData === undefined) {
+          if(mode === 'h') {
+            newData[y] = 0;
+          } else if(mode === 'w') {
+            newData[x] = 0;
+          }
+          tempData = 0;
         }
       }
-      if ((newData[y] < minData) || (!minData)) {
-        minData = newData[y];
+      if ((tempData < minData) || (!minData)) {
+        minData = tempData;
       }
-      if ((newData[y] > maxData) || (!maxData)) {
-        maxData = newData[y];
-      }
-      pixel += 4;
-    }
-  }
-  for (i = 0; i < newData.length; i += 1) {
-    newData[i] = parseInt((newData[i] - minData) / (maxData - minData) * 255, 10);
-  }
-  return newData;
-}
-
-function doColorBookW(input, cxt, canvas) {
-  "use strict";
-  var w = input.width,
-    h = input.height,
-    output = edgeDetection(input, 255, 1, cxt, canvas),
-    outputData = output.data,
-    newData = [],
-    maxData = false,
-    minData = false,
-    pixel = 0,
-    y, x, i;
-  for (y = 0; y < h; y += 1) {
-    for (x = 0; x < w; x += 1) {
-      if (outputData[pixel] < 240) {
-        if (newData[x] === undefined) {
-          newData[x] = 0;
-        }
-        newData[x] += 1;
-      } else {
-        if (newData[x] === undefined) {
-          newData[x] = 0;
-        }
-      }
-      if ((newData[x] < minData) || (!minData)) {
-        minData = newData[x];
-      }
-      if ((newData[x] > maxData) || (!maxData)) {
-        maxData = newData[x];
+      if ((tempData > maxData) || (!maxData)) {
+        maxData = tempData;
       }
       pixel += 4;
     }
@@ -183,30 +151,13 @@ var edgeDetectLines = [];
 
 function edgeDetect(options) {
   "use strict";
-  var canvas = (typeof options.canvas !== 'string') ? options.canvas : document.getElementById(options.canvas),
-    ocanvas = (typeof options.ocanvas !== 'string') ? options.ocanvas : document.getElementById(options.ocanvas),
+  var ocanvas = (typeof options.ocanvas !== 'string') ? options.ocanvas : document.getElementById(options.ocanvas),
     ocxt = ocanvas.getContext("2d"),
     input = ocxt.getImageData(0, 0, ocanvas.width, ocanvas.height);
 
-  edgeDetectLines[0] = doColorBookW(input, ocxt, ocanvas);
-  edgeDetectLines[1] = doColorBookH(input, ocxt, ocanvas);
+  edgeDetectLines[0] = doColorBook(input, ocxt, ocanvas, 'w');
+  edgeDetectLines[1] = doColorBook(input, ocxt, ocanvas, 'h');
   return edgeDetectLines;
-}
-
-function imgResize(options) {
-  "use strict";
-  var canvas = (typeof options.canvas !== 'string') ? options.canvas : document.getElementById(options.canvas),
-    imgsrc = (options.img !== undefined) ? (typeof options.img !== 'string') ? options.img.src : options.img : canvas.getAttribute('data-src'),
-    height = (options.height !== undefined) ? options.height : canvas.getAttribute('height'),
-    width = (options.width !== undefined) ? options.width : canvas.getAttribute('width'),
-    cxt, img;
-  canvas.setAttribute('width', width);
-  canvas.setAttribute('height', height);
-  cxt = canvas.getContext("2d");
-  img = new Image();
-  img.src = imgsrc;
-
-  cxt.drawImage(img, 0, 0, width, height);
 }
 
 function imgSmartResize(options) {

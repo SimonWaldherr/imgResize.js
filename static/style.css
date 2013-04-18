@@ -4,6 +4,8 @@ body {
 }
 ul {
   list-style: none;
+  text-align: left;
+  margin-left: 100px;
 }
 #imglist b {
   cursor: pointer;
