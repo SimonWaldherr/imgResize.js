@@ -1,12 +1,12 @@
 /*
- * tinyOSF.js
+ * imgResize.js
  *
  * Copyright 2013, Simon Waldherr - http://simon.waldherr.eu/
  * Released under the MIT Licence
  * http://opensource.org/licenses/MIT
  *
  * Github:  https://github.com/SimonWaldherr/imgResize.js
- * Version: 0.0.2
+ * Version: 0.0.3
  */
 
 /*jslint browser: true*/
@@ -184,12 +184,12 @@ var edgeDetectLines = [];
 function edgeDetect(options) {
   "use strict";
   var canvas = (typeof options.canvas !== 'string') ? options.canvas : document.getElementById(options.canvas),
-    cxt = canvas.getContext("2d"),
-    input = cxt.getImageData(0, 0, canvas.width, canvas.height);
+    ocanvas = (typeof options.ocanvas !== 'string') ? options.ocanvas : document.getElementById(options.ocanvas),
+    ocxt = ocanvas.getContext("2d"),
+    input = ocxt.getImageData(0, 0, ocanvas.width, ocanvas.height);
 
-  edgeDetectLines[0] = doColorBookW(input, cxt, document.getElementById('originalCanvas'));
-  edgeDetectLines[1] = doColorBookH(input, cxt, document.getElementById('originalCanvas'));
-  document.getElementById('json').innerHTML = JSON.stringify(edgeDetectLines);
+  edgeDetectLines[0] = doColorBookW(input, ocxt, ocanvas);
+  edgeDetectLines[1] = doColorBookH(input, ocxt, ocanvas);
   return edgeDetectLines;
 }
 
@@ -212,11 +212,11 @@ function imgResize(options) {
 function imgSmartResize(options) {
   "use strict";
   var canvas = (typeof options.canvas !== 'string') ? options.canvas : document.getElementById(options.canvas),
+    ocanvas = (typeof options.ocanvas !== 'string') ? options.ocanvas : document.getElementById(options.ocanvas),
     imgsrc = (options.img !== undefined) ? (typeof options.img !== 'string') ? options.img.src : options.img : canvas.getAttribute('data-src'),
     height = (options.height !== undefined) ? options.height : canvas.getAttribute('height'),
     width = (options.width !== undefined) ? options.width : canvas.getAttribute('width'),
     cxt = canvas.getContext("2d"),
-    ocanvas = document.getElementById('originalCanvas'),
     ocxt = ocanvas.getContext("2d"),
     ignoreRows,
     ignoreCols,
@@ -226,22 +226,20 @@ function imgSmartResize(options) {
     x, y,
     original = ocxt.getImageData(0, 0, ocanvas.getAttribute('width'), ocanvas.getAttribute('height')),
     outputData = cxt.createImageData(width, height);
-  edgeDetect({
-    'canvas': 'Canvas'
-  });
-
-
+  edgeDetect(options);
 
   function boringLines(linesArray, max) {
     var highest,
+      newLinesArray,
       i,
       higharray = [];
 
-    max = (max === undefined) ? linesArray.length : (max > linesArray.length) ? linesArray.length : max;
+    newLinesArray = linesArray;
+    max = (max === undefined) ? newLinesArray.length : (max > newLinesArray.length) ? newLinesArray.length : max;
     for (i = 0; i < max; i += 1) {
-      highest = linesArray.indexOf(Math.min.apply(window, linesArray));
-      if (linesArray[highest] < 255) {
-        linesArray[highest] = 255;
+      highest = newLinesArray.indexOf(Math.min.apply(window, newLinesArray));
+      if (newLinesArray[highest] < 255) {
+        newLinesArray[highest] = 255;
         higharray[higharray.length] = highest;
       }
     }

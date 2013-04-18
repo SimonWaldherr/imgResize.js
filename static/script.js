@@ -8,8 +8,8 @@ var demoimages = [{'name':'Air Force One','license':'Arbeit der US-Regierung','f
                   {'name':'Cat content','license':'Public Domain','filename':'catcontent.jpg','source':' ','height':480},
                   {'name':'L\'Ultima Cena','license':'Public Domain','filename':'lultimacena.jpg','source':' ','height':346}];
 function loadImageToCanvas(json, id) {
+  loadImage({'canvas' : document.getElementById('Canvas'), 'ocanvas' : document.getElementById('originalCanvas'), 'img' : 'static/'+json[id].filename});
   loadImage({'canvas' : document.getElementById('originalCanvas'), 'img' : 'static/'+json[id].filename});
-  loadImage({'canvas' : document.getElementById('Canvas'), 'img' : 'static/'+json[id].filename});
   document.getElementById('height').setAttribute('max',json[id].height);
   document.getElementById('height').setAttribute('value',json[id].height);
   document.getElementById('width').setAttribute('value',640);
@@ -19,6 +19,7 @@ function loadImageToCanvas(json, id) {
   
   document.getElementById('originalCanvas').setAttribute('height',json[id].height);
   document.getElementById('Canvas').setAttribute('height',json[id].height);
+  edgeDetectLines = [];
 }
 function printImgList(json, id) {
   var i, output = '', regex = /(http:\/\/www\.([a-zA-Z.\/_]+))/i, linktext;

@@ -9,7 +9,7 @@
   <div class="box">
     <h1>imgResize.js</h1>
     <ul>
-      <li><b>Version:</b> 0.0.2</li>
+      <li><b>Version:</b> 0.0.3</li>
       <li><b>License:</b> <a href="http://simon.waldherr.eu/license/mit/">MIT</a></li>
       <li><b>Demo:</b> <a href="http://simonwaldherr.github.io/imgResize.js/">simonwaldherr.github.io/imgResize.js/</a></li>
       <li><b>Repo:</b> <a href="https://github.com/SimonWaldherr/imgResize.js">github.com/SimonWaldherr/imgResize.js</a></li>
@@ -26,9 +26,9 @@
     <br/>
     <h2>Smart Resize</h2>
     <label for="width">WIDTH: </label>
-    <input name="width" id="widths" type="range" max="640" min="0" value="640" onchange="imgSmartResize({'width' : this.value, 'canvas' : 'Canvas'})">
+    <input name="width" id="widths" type="range" max="640" min="0" value="640" onchange="imgSmartResize({'width' : this.value, 'canvas' : 'Canvas', 'ocanvas' : 'originalCanvas'})">
     <label for="height">HEIGHT: </label>
-    <input name="height" id="heights" type="range" max="480" min="0" value="480" onchange="imgSmartResize({'height' : this.value, 'canvas' : 'Canvas'})">
+    <input name="height" id="heights" type="range" max="480" min="0" value="480" onchange="imgSmartResize({'height' : this.value, 'canvas' : 'Canvas', 'ocanvas' : 'originalCanvas'})">
     <br/><br/>
     <canvas id="originalCanvas" data-src="4032618153_e0c19e93a0_z.jpg" width="640" height="480" style="border:1px solid #c3c3c3; display:none;">
     Your browser does not support the canvas element.
@@ -39,7 +39,7 @@
     <br/><br/>
     <div id="json" style="display:none">imgSmartResize</div>
   </div>
-  <script type="text/javascript" src="imgresize.build.js"></script>
+  <script type="text/javascript" src="imgresize.js"></script>
   <script type="text/javascript" src="static/script.js"></script>
 </body>
 </html>
