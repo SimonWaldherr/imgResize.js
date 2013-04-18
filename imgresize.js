@@ -184,12 +184,12 @@ var edgeDetectLines = [];
 function edgeDetect(options) {
   "use strict";
   var canvas = (typeof options.canvas !== 'string') ? options.canvas : document.getElementById(options.canvas),
+    ocanvas = (typeof options.ocanvas !== 'string') ? options.ocanvas : document.getElementById(options.ocanvas),
     cxt = canvas.getContext("2d"),
     input = cxt.getImageData(0, 0, canvas.width, canvas.height);
 
-  edgeDetectLines[0] = doColorBookW(input, cxt, document.getElementById('originalCanvas'));
-  edgeDetectLines[1] = doColorBookH(input, cxt, document.getElementById('originalCanvas'));
-  document.getElementById('json').innerHTML = JSON.stringify(edgeDetectLines);
+  edgeDetectLines[0] = doColorBookW(input, cxt, ocanvas);
+  edgeDetectLines[1] = doColorBookH(input, cxt, ocanvas);
   return edgeDetectLines;
 }
 
@@ -212,11 +212,11 @@ function imgResize(options) {
 function imgSmartResize(options) {
   "use strict";
   var canvas = (typeof options.canvas !== 'string') ? options.canvas : document.getElementById(options.canvas),
+    ocanvas = (typeof options.ocanvas !== 'string') ? options.ocanvas : document.getElementById(options.ocanvas),
     imgsrc = (options.img !== undefined) ? (typeof options.img !== 'string') ? options.img.src : options.img : canvas.getAttribute('data-src'),
     height = (options.height !== undefined) ? options.height : canvas.getAttribute('height'),
     width = (options.width !== undefined) ? options.width : canvas.getAttribute('width'),
     cxt = canvas.getContext("2d"),
-    ocanvas = document.getElementById('originalCanvas'),
     ocxt = ocanvas.getContext("2d"),
     ignoreRows,
     ignoreCols,
@@ -226,7 +226,7 @@ function imgSmartResize(options) {
     x, y,
     original = ocxt.getImageData(0, 0, ocanvas.getAttribute('width'), ocanvas.getAttribute('height')),
     outputData = cxt.createImageData(width, height);
-    edgeDetect({'canvas': 'originalCanvas'});
+    edgeDetect(options);
 
   function boringLines(linesArray, max) {
     var highest,

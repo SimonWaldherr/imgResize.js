@@ -4,8 +4,8 @@ var demoimages = [{'name':'Air Force One','license':'Arbeit der US-Regierung','f
                   {'name':'Tree and Sky','license':'CC BY-NC 2.0','filename':'2515331481_4997cae738_z.jpg','source':'http://www.flickr.com/photos/freefoto/2515331481/','height':480},
                   {'name':'Two Trees','license':'CC BY-SA 2.0','filename':'2280692112_96b565920b_z.jpg','source':'http://www.flickr.com/photos/salford_ian/2280692112/','height':480}];
 function loadImageToCanvas(json, id) {
+  loadImage({'canvas' : document.getElementById('Canvas'), 'ocanvas' : document.getElementById('originalCanvas'), 'img' : 'static/'+json[id].filename});
   loadImage({'canvas' : document.getElementById('originalCanvas'), 'img' : 'static/'+json[id].filename});
-  loadImage({'canvas' : document.getElementById('Canvas'), 'img' : 'static/'+json[id].filename});
   document.getElementById('height').setAttribute('max',json[id].height);
   document.getElementById('height').setAttribute('value',json[id].height);
   document.getElementById('width').setAttribute('value',640);
@@ -15,7 +15,6 @@ function loadImageToCanvas(json, id) {
   
   document.getElementById('originalCanvas').setAttribute('height',json[id].height);
   document.getElementById('Canvas').setAttribute('height',json[id].height);
-  //delete edgeDetectLines;
   edgeDetectLines = [];
 }
 function printImgList(json, id) {
