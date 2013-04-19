@@ -6,7 +6,7 @@
  * http://opensource.org/licenses/MIT
  *
  * Github:  https://github.com/SimonWaldherr/imgResize.js
- * Version: 0.0.3
+ * Version: 0.0.4
  */
 
 /*jslint browser: true*/
@@ -102,31 +102,31 @@ function doColorBook(input, cxt, canvas, mode) {
     y, x, i;
   for (y = 0; y < h; y += 1) {
     for (x = 0; x < w; x += 1) {
-      if(mode === 'h') {
+      if (mode === 'h') {
         tempData = newData[y];
-      } else if(mode === 'w') {
+      } else if (mode === 'w') {
         tempData = newData[x];
       }
       if (outputData[pixel] < 240) {
         if (tempData === undefined) {
-          if(mode === 'h') {
+          if (mode === 'h') {
             newData[y] = 0;
-          } else if(mode === 'w') {
+          } else if (mode === 'w') {
             newData[x] = 0;
           }
           tempData = 0;
         }
-        if(mode === 'h') {
+        if (mode === 'h') {
           newData[y] += 1;
-        } else if(mode === 'w') {
+        } else if (mode === 'w') {
           newData[x] += 1;
         }
         tempData += 1;
       } else {
         if (tempData === undefined) {
-          if(mode === 'h') {
+          if (mode === 'h') {
             newData[y] = 0;
-          } else if(mode === 'w') {
+          } else if (mode === 'w') {
             newData[x] = 0;
           }
           tempData = 0;
@@ -153,11 +153,31 @@ function edgeDetect(options) {
   "use strict";
   var ocanvas = (typeof options.ocanvas !== 'string') ? options.ocanvas : document.getElementById(options.ocanvas),
     ocxt = ocanvas.getContext("2d"),
-    input = ocxt.getImageData(0, 0, ocanvas.width, ocanvas.height);
+    input = ocxt.getImageData(0, 0, ocanvas.width, ocanvas.height),
+    edgeDetectLinesTemp = [];
 
-  edgeDetectLines[0] = doColorBook(input, ocxt, ocanvas, 'w');
-  edgeDetectLines[1] = doColorBook(input, ocxt, ocanvas, 'h');
-  return edgeDetectLines;
+  edgeDetectLinesTemp[0] = doColorBook(input, ocxt, ocanvas, 'w');
+  edgeDetectLinesTemp[1] = doColorBook(input, ocxt, ocanvas, 'h');
+  return edgeDetectLinesTemp;
+}
+
+function boringLines(linesArray, max) {
+  "use strict";
+  var highest,
+    newLinesArray = [],
+    i,
+    higharray = [];
+
+  newLinesArray = linesArray.slice();
+  max = (max === undefined) ? newLinesArray.length : (max > newLinesArray.length) ? newLinesArray.length : max;
+  for (i = 0; i < max; i += 1) {
+    highest = newLinesArray.indexOf(Math.min.apply(window, newLinesArray));
+    if (newLinesArray[highest] < 255) {
+      newLinesArray[highest] = 255;
+      higharray[higharray.length] = highest;
+    }
+  }
+  return higharray;
 }
 
 function imgSmartResize(options) {
@@ -176,25 +196,21 @@ function imgSmartResize(options) {
     img,
     x, y,
     original = ocxt.getImageData(0, 0, ocanvas.getAttribute('width'), ocanvas.getAttribute('height')),
-    outputData = cxt.createImageData(width, height);
-  edgeDetect(options);
+    outputData = cxt.createImageData(width, height),
+    ocanvasheight = ocanvas.getAttribute('height'),
+    ocanvaswidth = ocanvas.getAttribute('width'),
+    pixelid = 0,
+    r, g, b,
+    originalarray = original.data,
+    outputarray = [],
+    buf = new ArrayBuffer((width) * (height) * 4),
+    buf8 = new Uint8ClampedArray(buf),
+    data = new Uint32Array(buf);
 
-  function boringLines(linesArray, max) {
-    var highest,
-      newLinesArray,
-      i,
-      higharray = [];
-
-    newLinesArray = linesArray;
-    max = (max === undefined) ? newLinesArray.length : (max > newLinesArray.length) ? newLinesArray.length : max;
-    for (i = 0; i < max; i += 1) {
-      highest = newLinesArray.indexOf(Math.min.apply(window, newLinesArray));
-      if (newLinesArray[highest] < 255) {
-        newLinesArray[highest] = 255;
-        higharray[higharray.length] = highest;
-      }
-    }
-    return higharray;
+  if (edgeDetectLines === undefined) {
+    edgeDetectLines = edgeDetect(options);
+  } else if (edgeDetectLines.length === 0) {
+    edgeDetectLines = edgeDetect(options);
   }
 
   ignoreRows = boringLines(edgeDetectLines[1], ocanvas.getAttribute('height') - height);
@@ -203,24 +219,28 @@ function imgSmartResize(options) {
   canvas.width = width;
   canvas.height = height;
 
-  for (y = 0; y < ocanvas.getAttribute('height'); y += 1) {
-    for (x = 0; x < ocanvas.getAttribute('width'); x += 1) {
+  for (y = 0; y < ocanvasheight; ++y) {
+    var starttime1 = new Date();
+    for (x = 0; x < ocanvaswidth; ++x) {
       if ((ignoreRows.indexOf(y) === -1) && (ignoreCols.indexOf(x) === -1)) {
-        outputData.data[pixel] = original.data[opixel];
-        outputData.data[pixel += 1] = original.data[opixel += 1];
-        outputData.data[pixel += 1] = original.data[opixel += 1];
-        outputData.data[pixel += 1] = 255;
-        opixel += 1;
-        opixel += 1;
-        pixel += 1;
+        r = originalarray[opixel] & 0xff;
+        g = originalarray[++opixel] & 0xff;
+        b = originalarray[++opixel] & 0xff;
+
+        data[pixelid] =
+          (255 << 24) | // alpha
+        (b << 16) | // blue
+        (g << 8) | // green
+        r; // red
+
+        ++pixelid;
+        opixel += 2;
       } else {
-        opixel += 1;
-        opixel += 1;
-        opixel += 1;
-        opixel += 1;
+        opixel += 4;
       }
     }
   }
+  outputData.data.set(buf8);
 
   img = new Image();
   img.src = imgsrc;

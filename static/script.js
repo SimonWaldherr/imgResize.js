@@ -28,6 +28,7 @@ function loadImageToCanvas(json, id) {
   
   document.getElementById('originalCanvas').setAttribute('height',json[id].height);
   document.getElementById('Canvas').setAttribute('height',json[id].height);
+  document.getElementById('canbox').style.height = json[id].height+'px';
   edgeDetectLines = [];
   
   imgResize({'width' : 640, 'canvas' : 'Canvas'});

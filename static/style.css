@@ -13,6 +13,11 @@ ul {
 #imglist i {
   font-size: 11px;
 }
+#canbox {
+  background: #cccccc;
+  margin: auto;
+  width: 640px;
+}
 .box {
   position: relative;
   width: 720px;
