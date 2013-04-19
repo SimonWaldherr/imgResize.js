@@ -7,12 +7,13 @@
 ##about
 
 License:   MIT  
-Version: 0.0.2  
-Date:   3.2013  
+Version: 0.0.4  
+Date:   4.2013  
 
 ##demo
 
-Test this code on the associated github page [simonwaldherr.github.io/imgResize.js/](http://simonwaldherr.github.io/imgResize.js/).
+Test this code on the associated github page [simonwaldherr.github.io/imgResize.js/](http://simonwaldherr.github.io/imgResize.js/).  
+the best results can be achieved with  ```Tree Silhouette```, ```Tree and Sky```, ```Two Trees 1``` and ```Two Trees 2```.
 
 ##contact
 
