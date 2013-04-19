@@ -94,6 +94,11 @@ function loadLocalImageToCanvas() {
   }
 }
 
+function exportCanvasToImage() {
+  var canvas = document.getElementById("Canvas");
+  window.open(canvas.toDataURL('png'), "imgResize.js", "width="+canvas.width+",height="+canvas.height+",left=100,top=200");
+}
+
 function printImgList(json, id) {
   var i, output = '', regex = /(http:\/\/www\.([a-zA-Z.\/_]+))/i, linktext;
   for(i=0;i<json.length;i+=1) {

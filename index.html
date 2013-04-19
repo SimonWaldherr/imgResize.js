@@ -2,14 +2,14 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>imgResize.build.js</title>
+  <title>imgResize.js</title>
   <link href="static/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
   <div class="box">
     <h1>imgResize.js</h1>
     <ul>
-      <li><b>Version:</b> 0.0.4</li>
+      <li><b>Version:</b> 0.0.5</li>
       <li><b>License:</b> <a href="http://simon.waldherr.eu/license/mit/">MIT</a></li>
       <li><b>Demo:</b> <a href="http://simonwaldherr.github.io/imgResize.js/">simonwaldherr.github.io/imgResize.js/</a></li>
       <li><b>Repo:</b> <a href="https://github.com/SimonWaldherr/imgResize.js">github.com/SimonWaldherr/imgResize.js</a></li>
@@ -42,6 +42,9 @@
       Your browser does not support the canvas element.
       </canvas>
     </div>
+    <form action='#' onsubmit="return false;">
+      <input type='button' id='btnExport' value='Export' onclick='exportCanvasToImage();' />
+    </form>
     <br/><br/>
     <div id="json" style="display:none">imgSmartResize</div>
   </div>

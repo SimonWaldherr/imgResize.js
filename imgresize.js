@@ -6,7 +6,7 @@
  * http://opensource.org/licenses/MIT
  *
  * Github:  https://github.com/SimonWaldherr/imgResize.js
- * Version: 0.0.4
+ * Version: 0.0.5
  */
 
 /*jslint browser: true*/
