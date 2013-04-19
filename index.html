@@ -17,6 +17,10 @@
   </div>
   <div class="box">
     <h2>Images List</h2>
+    <form action='#' onsubmit="return false;">
+      <input type='file' id='imgfile' />
+      <input type='button' id='btnLoad' value='Load' onclick='loadLocalImageToCanvas();' />
+    </form>
     <ul id="imglist"></ul>
     <h2>Normal Resize</h2>
     <label for="width">WIDTH: </label>

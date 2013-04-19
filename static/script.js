@@ -21,9 +21,11 @@ function loadImageToCanvas(json, id) {
   
   document.getElementById('height').max = json[id].height;
   document.getElementById('height').value = json[id].height;
+  document.getElementById('width').max = 640;
   document.getElementById('width').value = 640;
   document.getElementById('heights').max = json[id].height;
   document.getElementById('heights').value = json[id].height;
+  document.getElementById('widths').max = 640;
   document.getElementById('widths').value = 640;
   
   document.getElementById('originalCanvas').setAttribute('height',json[id].height);
@@ -32,6 +34,64 @@ function loadImageToCanvas(json, id) {
   edgeDetectLines = [];
   
   imgResize({'width' : 640, 'canvas' : 'Canvas'});
+}
+
+function loadLocalImageToCanvas() {
+  var input, file, fr, img;
+  function createImage() {
+    img = new Image();
+    img.onload = imageLoaded;
+    img.src = fr.result;
+  }
+  
+  function imageLoaded() {
+    var ocanvas = document.getElementById("originalCanvas"),
+      canvas = document.getElementById("Canvas"),
+      ctx, octx;
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+  
+    ocanvas.width = img.width;
+    ocanvas.height = img.height;
+    octx = ocanvas.getContext("2d");
+    octx.drawImage(img, 0, 0);
+    
+    document.getElementById('height').max = img.height;
+    document.getElementById('height').value = img.height;
+    document.getElementById('width').max = img.width;
+    document.getElementById('width').value = img.width;
+    
+    document.getElementById('heights').max = img.height;
+    document.getElementById('heights').value = img.height;
+    document.getElementById('widths').max = img.width;
+    document.getElementById('widths').value = img.width;
+    /*
+    document.getElementById('originalCanvas').setAttribute('height',img.height);
+    document.getElementById('Canvas').setAttribute('height',img.height);
+    document.getElementById('canbox').style.height = img.height+'px';
+    */
+  }
+
+  if (typeof window.FileReader !== 'function') {
+    alert("The file API isn't supported on this browser yet.");
+    return;
+  }
+
+  input = document.getElementById('imgfile');
+  if (!input) {
+    alert("Couldn't find the imgfile element.");
+  } else if (!input.files) {
+    alert("This browser doesn't seem to support the `files` property of file inputs.");
+  } else if (!input.files[0]) {
+    alert("Please select a file before clicking 'Load'");
+  } else {
+    file = input.files[0];
+    fr = new FileReader();
+    fr.onload = createImage;
+    fr.readAsDataURL(file);
+  }
 }
 
 function printImgList(json, id) {
