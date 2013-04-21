@@ -6,11 +6,11 @@
  * http://opensource.org/licenses/MIT
  *
  * Github:  https://github.com/SimonWaldherr/imgResize.js
- * Version: 0.0.5
+ * Version: 0.1.0
  */
 
-/*jslint browser: true*/
-/*global Image*/
+/*jslint browser: true, plusplus: true, bitwise: true, indent: 2*/
+/*global Image,ArrayBuffer,Uint8ClampedArray,Uint32Array*/
 /*exported imgSmartResize*/
 
 function edgeDetection(input, baseColor, grey, context, canvas) {
@@ -28,7 +28,27 @@ function edgeDetection(input, baseColor, grey, context, canvas) {
     priorRow,
     nextRow,
     factor,
-    r1, g1, b1, rp, rc, rn, r2, gp, gc, gn, g2, bp, bc, bn, b2, r, g, b, x, y;
+    r1,
+    g1,
+    b1,
+    rp,
+    rc,
+    rn,
+    r2,
+    gp,
+    gc,
+    gn,
+    g2,
+    bp,
+    bc,
+    bn,
+    b2,
+    r,
+    g,
+    b,
+    x,
+    y;
+
   for (y = 1; y < hm1; y += 1) {
     centerRow = pixel - 4;
     priorRow = centerRow - bytesPerRow;
@@ -99,7 +119,9 @@ function doColorBook(input, cxt, canvas, mode) {
     maxData = false,
     minData = false,
     pixel = 0,
-    y, x, i;
+    y,
+    x,
+    i;
   for (y = 0; y < h; y += 1) {
     for (x = 0; x < w; x += 1) {
       if (mode === 'h') {
@@ -149,37 +171,6 @@ function doColorBook(input, cxt, canvas, mode) {
 
 var edgeDetectLines = [];
 
-function edgeDetect(options) {
-  "use strict";
-  var ocanvas = (typeof options.ocanvas !== 'string') ? options.ocanvas : document.getElementById(options.ocanvas),
-    ocxt = ocanvas.getContext("2d"),
-    input = ocxt.getImageData(0, 0, ocanvas.width, ocanvas.height),
-    edgeDetectLinesTemp = [];
-
-  edgeDetectLinesTemp[0] = doColorBook(input, ocxt, ocanvas, 'w');
-  edgeDetectLinesTemp[1] = doColorBook(input, ocxt, ocanvas, 'h');
-  return edgeDetectLinesTemp;
-}
-
-function boringLines(linesArray, max) {
-  "use strict";
-  var highest,
-    newLinesArray = [],
-    i,
-    higharray = [];
-
-  newLinesArray = linesArray.slice();
-  max = (max === undefined) ? newLinesArray.length : (max > newLinesArray.length) ? newLinesArray.length : max;
-  for (i = 0; i < max; i += 1) {
-    highest = newLinesArray.indexOf(Math.min.apply(window, newLinesArray));
-    if (newLinesArray[highest] < 255) {
-      newLinesArray[highest] = 255;
-      higharray[higharray.length] = highest;
-    }
-  }
-  return higharray;
-}
-
 function imgSmartResize(options) {
   "use strict";
   var canvas = (typeof options.canvas !== 'string') ? options.canvas : document.getElementById(options.canvas),
@@ -189,23 +180,63 @@ function imgSmartResize(options) {
     width = (options.width !== undefined) ? options.width : canvas.getAttribute('width'),
     cxt = canvas.getContext("2d"),
     ocxt = ocanvas.getContext("2d"),
-    ignoreRows,
-    ignoreCols,
-    pixel = 0,
-    opixel = 0,
-    img,
-    x, y,
     original = ocxt.getImageData(0, 0, ocanvas.getAttribute('width'), ocanvas.getAttribute('height')),
     outputData = cxt.createImageData(width, height),
     ocanvasheight = ocanvas.getAttribute('height'),
     ocanvaswidth = ocanvas.getAttribute('width'),
-    pixelid = 0,
-    r, g, b,
     originalarray = original.data,
-    outputarray = [],
-    buf = new ArrayBuffer((width) * (height) * 4),
+    buf = new ArrayBuffer(width * height * 4),
     buf8 = new Uint8ClampedArray(buf),
-    data = new Uint32Array(buf);
+    data = new Uint32Array(buf),
+    opixel = 0,
+    pixelid = 0,
+    ignoreRows,
+    ignoreCols,
+    img,
+    ox,
+    oy,
+    r,
+    g,
+    b;
+
+  function arrayContains(searchfor, searchin) {
+    var j;
+    for (j = 0; j < searchin.length; ++j) {
+      if (searchin[j] === searchfor) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function edgeDetect(options) {
+    var ocanvas = (typeof options.ocanvas !== 'string') ? options.ocanvas : document.getElementById(options.ocanvas),
+      ocxt = ocanvas.getContext("2d"),
+      input = ocxt.getImageData(0, 0, ocanvas.width, ocanvas.height),
+      edgeDetectLinesTemp = [];
+
+    edgeDetectLinesTemp[0] = doColorBook(input, ocxt, ocanvas, 'w');
+    edgeDetectLinesTemp[1] = doColorBook(input, ocxt, ocanvas, 'h');
+    return edgeDetectLinesTemp;
+  }
+
+  function boringLines(linesArray, max) {
+    var highest,
+      newLinesArray = [],
+      i,
+      higharray = [];
+
+    newLinesArray = linesArray.slice();
+    max = (max === undefined) ? newLinesArray.length : (max > newLinesArray.length) ? newLinesArray.length : max;
+    for (i = 0; i < max; i += 1) {
+      highest = newLinesArray.indexOf(Math.min.apply(window, newLinesArray));
+      if (newLinesArray[highest] < 255) {
+        newLinesArray[highest] = 255;
+        higharray[higharray.length] = highest;
+      }
+    }
+    return higharray;
+  }
 
   if (edgeDetectLines === undefined) {
     edgeDetectLines = edgeDetect(options);
@@ -213,31 +244,30 @@ function imgSmartResize(options) {
     edgeDetectLines = edgeDetect(options);
   }
 
+  height = parseInt(height, 10);
+  width = parseInt(width, 10);
+
   ignoreRows = boringLines(edgeDetectLines[1], ocanvas.getAttribute('height') - height);
   ignoreCols = boringLines(edgeDetectLines[0], ocanvas.getAttribute('width') - width);
 
   canvas.width = width;
   canvas.height = height;
 
-  for (y = 0; y < ocanvasheight; ++y) {
-    var starttime1 = new Date();
-    for (x = 0; x < ocanvaswidth; ++x) {
-      if ((ignoreRows.indexOf(y) === -1) && (ignoreCols.indexOf(x) === -1)) {
-        r = originalarray[opixel] & 0xff;
-        g = originalarray[++opixel] & 0xff;
-        b = originalarray[++opixel] & 0xff;
+  for (oy = 0; oy < ocanvasheight; ++oy) {
+    if (arrayContains(oy, ignoreRows) !== true) {
+      for (ox = 0; ox < ocanvaswidth; ++ox) {
+        if (arrayContains(ox, ignoreCols) !== true) {
+          r = originalarray[opixel * 4];
+          g = originalarray[opixel * 4 + 1];
+          b = originalarray[opixel * 4 + 2];
 
-        data[pixelid] =
-          (255 << 24) | // alpha
-        (b << 16) | // blue
-        (g << 8) | // green
-        r; // red
-
-        ++pixelid;
-        opixel += 2;
-      } else {
-        opixel += 4;
+          data[pixelid] = (255 << 24) | (b << 16) | (g << 8) | r;
+          ++pixelid;
+        }
+        ++opixel;
       }
+    } else {
+      opixel += ox;
     }
   }
   outputData.data.set(buf8);

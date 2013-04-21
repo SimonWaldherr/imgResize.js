@@ -5,7 +5,7 @@
 ##about
 
 License:   MIT  
-Version: 0.0.5  
+Version: 0.1.0  
 Date:   4.2013  
 
 ##demo
