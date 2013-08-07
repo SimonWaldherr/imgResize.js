@@ -108,6 +108,11 @@ function edgeDetection(input, baseColor, grey, context, canvas) {
   return output;
 }
 
+function random(min, max) {
+  "use strict";
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 function doColorBook(input, cxt, canvas, mode) {
   "use strict";
   var w = input.width,
@@ -123,7 +128,7 @@ function doColorBook(input, cxt, canvas, mode) {
     x,
     i;
   for (y = 0; y < h; y += 1) {
-    if(mode === 'm') {
+    if (mode === 'm') {
       newData[y] = [];
     }
     for (x = 0; x < w; x += 1) {
@@ -172,12 +177,11 @@ function doColorBook(input, cxt, canvas, mode) {
   }
   if (mode === 'm') {
     return newData;
-  } else {
-    for (i = 0; i < newData.length; i += 1) {
-      newData[i] = parseInt((newData[i] - minData) / (maxData - minData) * 255, 10);
-    }
-    return newData;
   }
+  for (i = 0; i < newData.length; i += 1) {
+    newData[i] = parseInt((newData[i] - minData) / (maxData - minData) * 255, 10);
+  }
+  return newData;
 }
 
 var edgeDetectLines = [];
@@ -206,6 +210,8 @@ function imgSmartResize(options) {
     ignoreRows,
     ignoreCols,
     ignorePixels = [],
+    randomint = 0,
+    sortedPixels,
     img,
     ox,
     oy,
@@ -216,7 +222,7 @@ function imgSmartResize(options) {
 
   function arrayContains(searchfor, searchin) {
     var j;
-    for (j = 0; j < searchin.length; ++j) {
+    for (j = 0; j < searchin.length; j += 1) {
       if (searchin[j] === searchfor) {
         return true;
       }
@@ -230,16 +236,15 @@ function imgSmartResize(options) {
       input = ocxt.getImageData(0, 0, ocanvas.width, ocanvas.height),
       edgeDetectLinesTemp = [];
 
-    
-    if(options.mode === 1) {
+    if (options.mode === 1) {
       edgeDetectLinesTemp[0] = doColorBook(input, ocxt, ocanvas, 'w');
       edgeDetectLinesTemp[1] = doColorBook(input, ocxt, ocanvas, 'h');
-    } else if(options.mode === 2) {
+    } else if (options.mode === 2) {
       edgeDetectLinesTemp[2] = doColorBook(input, ocxt, ocanvas, 'm');
     }
     return edgeDetectLinesTemp;
   }
-  
+
   function indexOfHighest(linesArray) {
     return linesArray.indexOf(Math.min(linesArray));
   }
@@ -270,22 +275,20 @@ function imgSmartResize(options) {
 
   height = parseInt(height, 10);
   width = parseInt(width, 10);
-  var sortedPixels;
 
-  var randomint = 0;
-  if(options.mode === 1) {
+  if (options.mode === 1) {
     ignoreRows = boringLines(edgeDetectLines[1], ocanvas.getAttribute('height') - height);
     ignoreCols = boringLines(edgeDetectLines[0], ocanvas.getAttribute('width') - width);
   } else {
-    for (i = 0; i < edgeDetectLines[2].length; i++) {
+    for (i = 0; i < edgeDetectLines[2].length; i += 1) {
       imgMatrix[i] = edgeDetectLines[2][i].slice();
     }
-    for(oy = 0; oy < ocanvasheight; ++oy) {
+    for (oy = 0; oy < ocanvasheight; oy += 1) {
       ignorePixels[oy] = {};
       sortedPixels = imgMatrix[oy].sort();
-      for(ox = 0; ox < width; ox++) {
+      for (ox = 0; ox < width; ox += 1) {
         pixelIndex = indexOfHighest(imgMatrix[oy]);
-        if(pixelIndex !== -1) {
+        if (pixelIndex !== -1) {
           ignorePixels[oy][pixelIndex] = true;
           imgMatrix[oy][pixelIndex] = 0;
         } else {
@@ -299,15 +302,14 @@ function imgSmartResize(options) {
       }
     }
   }
-  console.log(ignorePixels);
 
   canvas.width = width;
   canvas.height = height;
-  
-  if(options.mode === 1) {
-    for (oy = 0; oy < ocanvasheight; ++oy) {
+
+  if (options.mode === 1) {
+    for (oy = 0; oy < ocanvasheight; oy += 1) {
       if (arrayContains(oy, ignoreRows) !== true) {
-        for (ox = 0; ox < ocanvaswidth; ++ox) {
+        for (ox = 0; ox < ocanvaswidth; ox += 1) {
           if (arrayContains(ox, ignoreCols) !== true) {
             r = originalarray[opixel * 4];
             g = originalarray[opixel * 4 + 1];
@@ -322,9 +324,9 @@ function imgSmartResize(options) {
         opixel += ox;
       }
     }
-  } else if(options.mode === 2) {
-    for (oy = 0; oy < ocanvasheight; ++oy) {
-      for (ox = 0; ox < ocanvaswidth; ++ox) {
+  } else if (options.mode === 2) {
+    for (oy = 0; oy < ocanvasheight; oy += 1) {
+      for (ox = 0; ox < ocanvaswidth; ox += 1) {
         if (ignorePixels[oy][ox] === true) {
           r = originalarray[opixel * 4];
           g = originalarray[opixel * 4 + 1];
@@ -337,7 +339,7 @@ function imgSmartResize(options) {
       }
     }
   }
-  
+
   outputData.data.set(buf8);
 
   img = new Image();
