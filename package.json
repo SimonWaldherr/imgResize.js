@@ -27,12 +27,11 @@
   },
   "homepage": "https://github.com/SimonWaldherr/imgResize.js",
   "keywords": [
-    "color",
-    "hex",
-    "hsl",
-    "rgb",
-    "cmyk",
-    "hsv"
+    "canvas",
+    "image",
+    "manipulation",
+    "resize",
+    "edge"
   ],
   "license": "MIT",
   "main": "imgresize.js",
