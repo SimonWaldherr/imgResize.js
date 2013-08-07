@@ -5,8 +5,8 @@
 ##about
 
 License:   MIT  
-Version: 0.1.0  
-Date:   4.2013  
+Version: 0.1.1  
+Date:   8.2013  
 
 ##info
 

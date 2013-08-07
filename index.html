@@ -4,12 +4,13 @@
   <meta charset="utf-8">
   <title>imgResize.js</title>
   <link href="static/style.css" rel="stylesheet" type="text/css">
+  <link href="http://selfcss.org/baf/css/baf.css" media="screen" rel="stylesheet" type="text/css"/>
 </head>
 <body>
   <div class="box">
     <h1>imgResize.js</h1>
     <ul>
-      <li><b>Version:</b> 0.1.0</li>
+      <li><b>Version:</b> 0.1.1</li>
       <li><b>License:</b> <a href="http://simon.waldherr.eu/license/mit/">MIT</a></li>
       <li><b>Demo:</b> <a href="http://simonwaldherr.github.io/imgResize.js/">simonwaldherr.github.io/imgResize.js/</a></li>
       <li><b>Repo:</b> <a href="https://github.com/SimonWaldherr/imgResize.js">github.com/SimonWaldherr/imgResize.js</a></li>
@@ -17,22 +18,21 @@
   </div>
   <div class="box">
     <h2>Images List</h2>
-    <form action='#' onsubmit="return false;">
-      <input type='file' id='imgfile' />
-      <input type='button' id='btnLoad' value='Load' onclick='loadLocalImageToCanvas();' />
+    <form action="#" onsubmit="return false;">
+      <input type="file" id="imgfile" />
+      <input type="button" class="baf w60 bluehover" id="btnLoad" value="Load" onclick="loadLocalImageToCanvas();" />
     </form>
     <ul id="imglist"></ul>
-    <h2>Normal Resize</h2>
+    <div class="baf-group baf-group-x1">
+      <a class="baf w60 bluehover changeResizeMode blue">Normal</a>
+      <a class="baf w60 bluehover changeResizeMode">Smart</a>
+      <a class="baf w60 bluehover changeResizeMode">Smart+</a>
+    </div>
+    <br/><br/>
     <label for="width">WIDTH: </label>
-    <input name="width" id="width" type="range" max="640" min="0" value="640" onchange="imgResize({'width' : this.value, 'canvas' : 'Canvas'})">
+    <input name="width" id="width" type="range" max="640" min="0" value="640" onchange="changeSlider()">
     <label for="height">HEIGHT: </label>
-    <input name="height" id="height" type="range" max="480" min="0" value="480" onchange="imgResize({'height' : this.value, 'canvas' : 'Canvas'})">
-    <br/>
-    <h2>Smart Resize</h2>
-    <label for="width">WIDTH: </label>
-    <input name="width" id="widths" type="range" max="640" min="0" value="640" onchange="imgSmartResize({'width' : this.value, 'canvas' : 'Canvas', 'ocanvas' : 'originalCanvas'})">
-    <label for="height">HEIGHT: </label>
-    <input name="height" id="heights" type="range" max="480" min="0" value="480" onchange="imgSmartResize({'height' : this.value, 'canvas' : 'Canvas', 'ocanvas' : 'originalCanvas'})">
+    <input name="height" id="height" type="range" max="480" min="0" value="480" onchange="changeSlider()">
     <br/><br/>
     <canvas id="originalCanvas" data-src="4032618153_e0c19e93a0_z.jpg" width="640" height="480" style="display:none;">
     Your browser does not support the canvas element.
@@ -41,9 +41,9 @@
       <canvas id="Canvas" data-src="4032618153_e0c19e93a0_z.jpg" width="640" height="480">
       Your browser does not support the canvas element.
       </canvas>
-    </div>
-    <form action='#' onsubmit="return false;">
-      <input type='button' id='btnExport' value='Export' onclick='exportCanvasToImage();' />
+    </div><br/>
+    <form action="#" onsubmit="return false;">
+      <input type="button" id="btnExport" class="baf w60 bluehover" value="Export" onclick="exportCanvasToImage();" />
     </form>
     <br/><br/>
     <div id="json" style="display:none">imgSmartResize</div>
