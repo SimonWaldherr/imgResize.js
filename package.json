@@ -1,0 +1,53 @@
+{
+  "author": {
+    "email": "contact@simonwaldherr.de",
+    "name": "Simon Waldherr",
+    "url": "http://simon.waldherr.eu/"
+  },
+  "bugs": {
+    "email": "contact@simonwaldherr.de",
+    "url": "https://github.com/SimonWaldherr/imgResize.js/issues"
+  },
+  "contributors": [
+    {
+      "email": "contact@simonwaldherr.de",
+      "name": "Simon Waldherr",
+      "url": "http://simon.waldherr.eu/"
+    }
+  ],
+  "demos": [
+    "./index.html"
+  ],
+  "description": "smart resize images in a HTML5 Canvas",
+  "devDependencies": {
+    "grunt": ">= 0.4.1",
+    "grunt-compare-size": ">= 0.0.0",
+    "grunt-contrib-uglify": ">= 0.2.2",
+    "gzip-js": ">= 0.3.1"
+  },
+  "homepage": "https://github.com/SimonWaldherr/imgResize.js",
+  "keywords": [
+    "color",
+    "hex",
+    "hsl",
+    "rgb",
+    "cmyk",
+    "hsv"
+  ],
+  "license": "MIT",
+  "main": "imgresize.js",
+  "maintainers": [
+    {
+      "email": "contact@simonwaldherr.de",
+      "name": "Simon Waldherr",
+      "web": "http://simon.waldherr.eu/"
+    }
+  ],
+  "name": "imgresizejs",
+  "title": "imgResize.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SimonWaldherr/imgResize.js.git"
+  },
+  "version": "0.1.0"
+}

@@ -8,6 +8,11 @@ License:   MIT
 Version: 0.1.0  
 Date:   4.2013  
 
+##info
+
+imgResize resizes images based on edge detection. With this technology remains the important content with the same size and unimportant content disappears.  
+<img src="https://raw.github.com/SimonWaldherr/imgResize.js/master/static/smartresize.jpg" alt="imgResize Demo" />
+
 ##demo
 
 Test this code on the associated github page [simonwaldherr.github.io/imgResize.js/](http://simonwaldherr.github.io/imgResize.js/).  
