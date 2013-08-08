@@ -23,10 +23,6 @@ function loadImageToCanvas(json, id) {
   document.getElementById('height').value = json[id].height;
   document.getElementById('width').max = 640;
   document.getElementById('width').value = 640;
-  document.getElementById('heights').max = json[id].height;
-  document.getElementById('heights').value = json[id].height;
-  document.getElementById('widths').max = 640;
-  document.getElementById('widths').value = 640;
   
   document.getElementById('originalCanvas').setAttribute('height',json[id].height);
   document.getElementById('Canvas').setAttribute('height',json[id].height);
@@ -63,10 +59,6 @@ function loadLocalImageToCanvas() {
     document.getElementById('width').max = img.width;
     document.getElementById('width').value = img.width;
     
-    document.getElementById('heights').max = img.height;
-    document.getElementById('heights').value = img.height;
-    document.getElementById('widths').max = img.width;
-    document.getElementById('widths').value = img.width;
     /*
     document.getElementById('originalCanvas').setAttribute('height',img.height);
     document.getElementById('Canvas').setAttribute('height',img.height);
@@ -104,9 +96,9 @@ function printImgList(json, id) {
   for(i=0;i<json.length;i+=1) {
     if(json[i].license !== 'Public Domain') {
       linktext = regex.exec(json[i].source);
-      output += '<li><b onclick="loadImageToCanvas(demoimages,'+i+')">'+json[i].name+'</b> <i>(license: '+json[i].license+', from: <a href="'+json[i].source+'">'+linktext[2]+'</a>)</i></li>';
+      output += '<li><b class="baf bluehover w120 changeImage" data-imgid="'+i+'">'+json[i].name+'</b> <i>(license: '+json[i].license+', from: <a href="'+json[i].source+'">'+linktext[2]+'</a>)</i></li>';
     } else {
-      output += '<li><b onclick="loadImageToCanvas(demoimages,'+i+')">'+json[i].name+'</b> <i>(license: '+json[i].license+')</i></li>';
+      output += '<li><b class="baf bluehover w120 changeImage" data-imgid="'+i+'">'+json[i].name+'</b> <i>(license: '+json[i].license+')</i></li>';
     }
   }
   document.getElementById(id).innerHTML = output;
@@ -143,7 +135,54 @@ function imgResize(options) {
   cxt.drawImage(img, 0, 0, width, height);
 }
 
+var i, resizeMode = 'Normal', selectedImage, imagebuttons = document.getElementsByClassName('changeImage'), modebuttons = document.getElementsByClassName('changeResizeMode');
+function $val(id) {
+  return document.getElementById(id).value;
+}
+function changeSlider() {
+  if(resizeMode === 'Normal') {
+    imgResize({'height' : $val('height'), 'width' : $val('width'), 'canvas' : 'Canvas'});
+  } else if(resizeMode === 'Smart') {
+    imgSmartResize({'height' : $val('height'), 'width' : $val('width'), 'canvas' : 'Canvas', 'ocanvas' : 'originalCanvas', 'mode': 1});
+  } else if(resizeMode === 'Smart+') {
+    imgSmartResize({'height' : $val('height'), 'width' : $val('width'), 'canvas' : 'Canvas', 'ocanvas' : 'originalCanvas', 'mode': 2});
+  }
+}
 window.onload = function() {
+  selectedImage = random(0, demoimages.length-1);
   printImgList(demoimages,'imglist');
-  loadImageToCanvas(demoimages, random(0, demoimages.length-1));
+  loadImageToCanvas(demoimages, selectedImage);
+  imagebuttons[selectedImage].className += ' blue';
+  for (i = 0; i < modebuttons.length; i++) {
+    modebuttons[i].onclick = function () {
+      var classes, i, active;
+      for (i = 0; i < modebuttons.length; i++) {
+        classes = modebuttons[i].className.split(/\s+/);
+        active = classes.indexOf('blue');
+        if(active !== -1) {
+          classes[active] = '';
+        }
+        modebuttons[i].className = classes.join(" ");
+      }
+      edgeDetectLines = [];
+      this.className += ' blue';
+      resizeMode = this.innerHTML;
+      changeSlider();
+    }
+  }
+  for (i = 0; i < imagebuttons.length; i++) {
+    imagebuttons[i].onclick = function () {
+      var classes, i, active;
+      for (i = 0; i < imagebuttons.length; i++) {
+        classes = imagebuttons[i].className.split(/\s+/);
+        active = classes.indexOf('blue');
+        if(active !== -1) {
+          classes[active] = '';
+        }
+        imagebuttons[i].className = classes.join(" ");
+      }
+      this.className += ' blue';
+      loadImageToCanvas(demoimages,this.getAttribute("data-imgid"));
+    }
+  }
 };

@@ -31,3 +31,7 @@ ul {
   text-align: center;
   font-family: "Hoefler Text", Constantia, Palatino, Georgia, serif;
 }
+
+.w120 {
+  margin: 1px !important;
+}
