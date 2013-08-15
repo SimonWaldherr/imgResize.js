@@ -6,6 +6,8 @@ var demoimages = [{'name':'Air Force One','license':'Arbeit der US-Regierung','f
                   {'name':'Two Trees 2','license':'CC BY-NC 2.0','filename':'4448645964_d5d015135f_z.jpg','source':'http://www.flickr.com/photos/savagecabage/4448645964/','height':480},
                   {'name':'Two Trees 3','license':'CC BY-NC-SA 2.0','filename':'2430351821_0fa4bb7098_z.jpg','source':'http://www.flickr.com/photos/vertigogen/2430351821/','height':433},
                   {'name':'Two Trees 4','license':'CC BY-SA 2.0','filename':'4023839232_619709b044_z.jpg','source':'http://www.flickr.com/photos/quinnanya/4023839232/','height':480},
+                  {'name':'Two Trees 5','license':'Public Domain','filename':'trees-110286_640.jpg','source':'','height':359},
+                  {'name':'Four Trees','license':'Public Domain','filename':'trees_1_bg_010304.jpg','source':'','height':480},
                   {'name':'field','license':'Public Domain','filename':'field.jpg','source':' ','height':478},
                   {'name':'sun','license':'Public Domain','filename':'sun.jpg','source':' ','height':480},
                   {'name':'Cat content','license':'Public Domain','filename':'catcontent.jpg','source':' ','height':480},
