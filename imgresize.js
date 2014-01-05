@@ -6,7 +6,7 @@
  * http://opensource.org/licenses/MIT
  *
  * Github:  https://github.com/SimonWaldherr/imgResize.js
- * Version: 0.1.1
+ * Version: 0.1.2
  */
 
 /*jslint browser: true, plusplus: true, bitwise: true, indent: 2*/
@@ -54,19 +54,34 @@ function edgeDetection(input, baseColor, grey, context, canvas) {
     priorRow = centerRow - bytesPerRow;
     nextRow = centerRow + bytesPerRow;
     r1 = -inputData[priorRow] - inputData[centerRow] - inputData[nextRow];
-    g1 = -inputData[priorRow += 1] - inputData[centerRow += 1] - inputData[nextRow += 1];
-    b1 = -inputData[priorRow += 1] - inputData[centerRow += 1] - inputData[nextRow += 1];
-    rp = inputData[priorRow += 2];
-    rc = inputData[centerRow += 2];
-    rn = inputData[nextRow += 2];
+    priorRow += 1;
+    centerRow += 1;
+    nextRow += 1;
+    g1 = -inputData[priorRow] - inputData[centerRow] - inputData[nextRow];
+    priorRow += 1;
+    centerRow += 1;
+    nextRow += 1;
+    b1 = -inputData[priorRow] - inputData[centerRow] - inputData[nextRow];
+    priorRow += 2;
+    centerRow += 2;
+    nextRow += 2;
+    rp = inputData[priorRow];
+    rc = inputData[centerRow];
+    rn = inputData[nextRow];
     r2 = -rp - rc - rn;
-    gp = inputData[priorRow += 1];
-    gc = inputData[centerRow += 1];
-    gn = inputData[nextRow += 1];
+    priorRow += 1;
+    centerRow += 1;
+    nextRow += 1;
+    gp = inputData[priorRow];
+    gc = inputData[centerRow];
+    gn = inputData[nextRow];
     g2 = -gp - gc - gn;
-    bp = inputData[priorRow += 1];
-    bc = inputData[centerRow += 1];
-    bn = inputData[nextRow += 1];
+    priorRow += 1;
+    centerRow += 1;
+    nextRow += 1;
+    bp = inputData[priorRow];
+    bc = inputData[centerRow];
+    bn = inputData[nextRow];
     b2 = -bp - bc - bn;
     for (x = 1; x < wm1; x += 1) {
       centerRow = pixel + 4;
@@ -82,25 +97,36 @@ function edgeDetection(input, baseColor, grey, context, canvas) {
       rc = inputData[centerRow];
       rn = inputData[nextRow];
       r2 = -rp - rc - rn;
-      gp = inputData[priorRow += 1];
-      gc = inputData[centerRow += 1];
-      gn = inputData[nextRow += 1];
+      priorRow += 1;
+      centerRow += 1;
+      nextRow += 1;
+      gp = inputData[priorRow];
+      gc = inputData[centerRow];
+      gn = inputData[nextRow];
       g2 = -gp - gc - gn;
-      bp = inputData[priorRow += 1];
-      bc = inputData[centerRow += 1];
-      bn = inputData[nextRow += 1];
+      priorRow += 1;
+      centerRow += 1;
+      nextRow += 1;
+      bp = inputData[priorRow];
+      bc = inputData[centerRow];
+      bn = inputData[nextRow];
       b2 = -bp - bc - bn;
       if (!grey) {
         outputData[pixel] = r + r2;
-        outputData[pixel += 1] = g + g2;
-        outputData[pixel += 1] = b + b2;
+        pixel += 1;
+        outputData[pixel] = g + g2;
+        pixel += 1;
+        outputData[pixel] = b + b2;
       } else {
         factor = 0.3 * (r + r2) + 0.59 * (g + g2) + 0.11 * (b + b2);
         outputData[pixel] = factor;
-        outputData[pixel += 1] = factor;
-        outputData[pixel += 1] = factor;
+        pixel += 1;
+        outputData[pixel] = factor;
+        pixel += 1;
+        outputData[pixel] = factor;
       }
-      outputData[pixel += 1] = 255;
+      pixel += 1;
+      outputData[pixel] = 255;
       pixel += 1;
     }
     pixel += 8;
@@ -211,7 +237,7 @@ function imgSmartResize(options) {
     ignoreCols,
     ignorePixels = [],
     randomint = 0,
-    sortedPixels,
+    //sortedPixels = [],
     img,
     ox,
     oy,
@@ -231,10 +257,10 @@ function imgSmartResize(options) {
   }
 
   function edgeDetect(options) {
-    var ocanvas = (typeof options.ocanvas !== 'string') ? options.ocanvas : document.getElementById(options.ocanvas),
-      ocxt = ocanvas.getContext("2d"),
-      input = ocxt.getImageData(0, 0, ocanvas.width, ocanvas.height),
+    var input = ocxt.getImageData(0, 0, ocanvas.width, ocanvas.height),
       edgeDetectLinesTemp = [];
+    ocanvas = (typeof options.ocanvas !== 'string') ? options.ocanvas : document.getElementById(options.ocanvas);
+    ocxt = ocanvas.getContext("2d");
 
     if (options.mode === 1) {
       edgeDetectLinesTemp[0] = doColorBook(input, ocxt, ocanvas, 'w');
@@ -252,7 +278,6 @@ function imgSmartResize(options) {
   function boringLines(linesArray, max) {
     var highest,
       newLinesArray = [],
-      i,
       higharray = [];
 
     newLinesArray = linesArray.slice();
@@ -279,13 +304,13 @@ function imgSmartResize(options) {
   if (options.mode === 1) {
     ignoreRows = boringLines(edgeDetectLines[1], ocanvas.getAttribute('height') - height);
     ignoreCols = boringLines(edgeDetectLines[0], ocanvas.getAttribute('width') - width);
-  } else {
+  } else if (options.mode === 2) {
     for (i = 0; i < edgeDetectLines[2].length; i += 1) {
       imgMatrix[i] = edgeDetectLines[2][i].slice();
     }
     for (oy = 0; oy < ocanvasheight; oy += 1) {
       ignorePixels[oy] = {};
-      sortedPixels = imgMatrix[oy].sort();
+      //sortedPixels = imgMatrix[oy].sort();
       for (ox = 0; ox < width; ox += 1) {
         pixelIndex = indexOfHighest(imgMatrix[oy]);
         if (pixelIndex !== -1) {
@@ -327,7 +352,7 @@ function imgSmartResize(options) {
   } else if (options.mode === 2) {
     for (oy = 0; oy < ocanvasheight; oy += 1) {
       for (ox = 0; ox < ocanvaswidth; ox += 1) {
-        if (ignorePixels[oy][ox] === true) {
+        if (ignorePixels[oy][ox] !== true) {
           r = originalarray[opixel * 4];
           g = originalarray[opixel * 4 + 1];
           b = originalarray[opixel * 4 + 2];

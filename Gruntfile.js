@@ -23,7 +23,7 @@ module.exports = function(grunt) {
                 ' * http://opensource.org/licenses/MIT\n' +
                 ' *\n' +
                 ' * Github:  https://github.com/SimonWaldherr/imgResize.js\n' +
-                ' * Version: 0.1.1\n' +
+                ' * Version: 0.1.2\n' +
                 ' */\n' +
                 ' \n' +
                 '/*jslint browser: true, plusplus: true, bitwise: true, indent: 2*/\n' +
