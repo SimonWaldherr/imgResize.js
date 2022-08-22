@@ -1,5 +1,9 @@
 # imgResize.js
 
+[![DOI](https://zenodo.org/badge/8938076.svg)](https://zenodo.org/badge/latestdoi/8938076) 
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)  
+
+
 *resize images in a HTML5 Canvas*
 
 ## about
