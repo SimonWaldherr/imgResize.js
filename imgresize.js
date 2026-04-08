@@ -246,16 +246,6 @@ function imgSmartResize(options) {
     b,
     i;
 
-  function arrayContains(searchfor, searchin) {
-    var j;
-    for (j = 0; j < searchin.length; j += 1) {
-      if (searchin[j] === searchfor) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   function edgeDetect(options) {
     var input = ocxt.getImageData(0, 0, ocanvas.width, ocanvas.height),
       edgeDetectLinesTemp = [];
@@ -271,8 +261,8 @@ function imgSmartResize(options) {
     return edgeDetectLinesTemp;
   }
 
-  function indexOfHighest(linesArray) {
-    return linesArray.indexOf(Math.min(linesArray));
+  function indexOfLowest(linesArray) {
+    return linesArray.indexOf(Math.min.apply(null, linesArray));
   }
 
   function boringLines(linesArray, max) {
@@ -283,7 +273,7 @@ function imgSmartResize(options) {
     newLinesArray = linesArray.slice();
     max = (max === undefined) ? newLinesArray.length : (max > newLinesArray.length) ? newLinesArray.length : max;
     for (i = 0; i < max; i += 1) {
-      highest = newLinesArray.indexOf(Math.min.apply(window, newLinesArray));
+      highest = newLinesArray.indexOf(Math.min.apply(null, newLinesArray));
       if (newLinesArray[highest] < 255) {
         newLinesArray[highest] = 255;
         higharray[higharray.length] = highest;
@@ -302,8 +292,8 @@ function imgSmartResize(options) {
   width = parseInt(width, 10);
 
   if (options.mode === 1) {
-    ignoreRows = boringLines(edgeDetectLines[1], ocanvas.getAttribute('height') - height);
-    ignoreCols = boringLines(edgeDetectLines[0], ocanvas.getAttribute('width') - width);
+    ignoreRows = new Set(boringLines(edgeDetectLines[1], ocanvas.getAttribute('height') - height));
+    ignoreCols = new Set(boringLines(edgeDetectLines[0], ocanvas.getAttribute('width') - width));
   } else if (options.mode === 2) {
     for (i = 0; i < edgeDetectLines[2].length; i += 1) {
       imgMatrix[i] = edgeDetectLines[2][i].slice();
@@ -312,7 +302,7 @@ function imgSmartResize(options) {
       ignorePixels[oy] = {};
       //sortedPixels = imgMatrix[oy].sort();
       for (ox = 0; ox < width; ox += 1) {
-        pixelIndex = indexOfHighest(imgMatrix[oy]);
+        pixelIndex = indexOfLowest(imgMatrix[oy]);
         if (pixelIndex !== -1) {
           ignorePixels[oy][pixelIndex] = true;
           imgMatrix[oy][pixelIndex] = 0;
@@ -333,9 +323,9 @@ function imgSmartResize(options) {
 
   if (options.mode === 1) {
     for (oy = 0; oy < ocanvasheight; oy += 1) {
-      if (arrayContains(oy, ignoreRows) !== true) {
+      if (!ignoreRows.has(oy)) {
         for (ox = 0; ox < ocanvaswidth; ox += 1) {
-          if (arrayContains(ox, ignoreCols) !== true) {
+          if (!ignoreCols.has(ox)) {
             r = originalarray[opixel * 4];
             g = originalarray[opixel * 4 + 1];
             b = originalarray[opixel * 4 + 2];
